@@ -1,0 +1,23 @@
+.sidebar {
+    flex: 0 0 200px; /* Fixed width sidebar */
+    background-color: #f0f0f0;
+    padding: 20px;
+    justify-content: left;
+    position: relative;
+}
+
+.absolute-content {
+    position: absolute;
+    left: 0; /* Position at the very left */
+    width: 100%; /* Occupy the entire width of the sidebar */
+}
+
+.absolute-content p {
+    margin: 0; /* Remove default margin for paragraphs */
+}
+
+.main-content {
+    flex: 1; /* Take remaining space */
+    background-color: #ffffff;
+    padding: 20px;
+}
