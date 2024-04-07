@@ -12,7 +12,8 @@ class MainSpace extends Component {
         this.fbxLoader = new FBXLoader();
         this.scene = new THREE.Scene();
         //this.model = null;
-        this.childNames = []
+        this.meshCount = []
+        this.uniqueMeshes = []
         this.meshes = []; // Array to store references to mesh objects
 
         this.sizes = {
@@ -44,16 +45,21 @@ class MainSpace extends Component {
 
                 object.traverse((child) => {
                     if (child.isMesh && child.material) {
+                        this.meshes.push(child);
 
-                        // Store reference to mesh
-                        if(!this.childNames.includes(child.name)){
-                          this.childNames.push(child.name)
-                          this.meshes.push(child);
-                        }
-                        
+                        // Store mesh count reference
+                        if(!this.meshCount.includes(child.name)){
+                          this.meshCount.push(child.name)
+                          
+                        }                        
                     }
                 });
+                
+                //Save mesh objects with latest mesh references
+                this.uniqueMeshes = this.meshes.slice(this.meshCount.length)
+
                 console.log(this.meshes)
+                console.log(this.uniqueMeshes)
 
                 this.scene.add(object);
                 this.model = object
@@ -77,14 +83,16 @@ class MainSpace extends Component {
     //TODO Fix Updating Colors from Palette to Meshes
     updateMeshColors() {
         const { colors } = this.props;
-        console.log("COlors", colors)
-        this.meshes.forEach((mesh, index) => {
+
+        this.uniqueMeshes.forEach((mesh, index) => {
             if (colors && colors[index]) {
-                console.log("Changed Color at",index,"for", mesh.name)
                 const { r, g, b } = colors[index]; //Get the RGB Values from the color object in the array
 
                 //Convert the RGB Values to (0,1) range expected by Three.Js
                 mesh.material.color.setRGB(r/255, g/255, b/255);
+                
+                //console.log("Changed Color to",colors[index]," at ",index," for ", mesh.name)
+
             }
         });
 
@@ -112,11 +120,11 @@ class MainSpace extends Component {
     const ambientLight = new THREE.AmbientLight(0xffffff,1)
     this.scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff,1)
-    directionalLight.position.set(500,700,-500);
-    directionalLight.castShadow = true;
-    const dlHelper = new THREE.DirectionalLightHelper(directionalLight, 50)
-    this.scene.add(directionalLight, dlHelper)
+    // const directionalLight = new THREE.DirectionalLight(0xffffff,1)
+    // directionalLight.position.set(500,700,-500);
+    // directionalLight.castShadow = true;
+    // const dlHelper = new THREE.DirectionalLightHelper(directionalLight, 50)
+    // this.scene.add(directionalLight, dlHelper)
 
     // create cube and add it to the scene
     // const geometry = new THREE.BoxGeometry(1, 1, 1);

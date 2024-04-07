@@ -8,9 +8,9 @@ class ColorPicker extends React.Component {
   state = {
     displayColorPicker: false,
     color: {
-      r: '241',
-      g: '112',
-      b: '19',
+      r: '128',
+      g: '128',
+      b: '128',
       a: '1',
     },
   };
@@ -23,9 +23,24 @@ class ColorPicker extends React.Component {
     this.setState({ displayColorPicker: false })
   };
 
+  componentDidUpdate(prevProps) {
+    console.log("Color Has Changed")
+      // Check if the colors prop has changed
+      // if (prevProps.the_color !== this.props.the_color) {
+      //     // Update colors of meshes
+      //     console.log("Yes", this.props.the_color)
+      // }
+  }
+  updateColorProp(color) {
+    this.setState( {color: color})
+
+    console.log("THe color is", this.state.color)
+  }
+
 
   render() {
     let { the_color, onChangeColor} = this.props;
+    //this.state.color = the_color
 
     const styles = reactCSS({
       'default': {
@@ -33,7 +48,7 @@ class ColorPicker extends React.Component {
           width: '50px',
           height: '50px',
           borderRadius: '2px',
-          background: `rgba(${ the_color.r }, ${ the_color.g }, ${ the_color.b }, ${ the_color.a })`,
+          background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
         },
         swatch: {
           padding: '5px',
@@ -64,7 +79,7 @@ class ColorPicker extends React.Component {
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>
           <div style={ styles.cover } onClick={ this.handleClose }/>
-          <SketchPicker color={ the_color } onChange={e => onChangeColor(e)} />
+          <SketchPicker color={ the_color } onChangeComplete={e => onChangeColor(e)} />
         </div> : null }
 
       </div>
